@@ -17,7 +17,10 @@
   },
   "homepage": "https://github.com/DioNery/API_REST_Node-Postgres#readme",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "postgres": "^3.4.0"
+    "pg": "^8.11.3",
+    "postgres": "^3.4.0",
+    "sequelize": "^6.33.0"
   }
 }
