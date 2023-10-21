@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 const express = require('express');
 const app = express();
 const port = 3000;
-const UserCurriculo = require('./userModel'); 
+const UserCurriculo = require('./models/userCurriculos'); 
 require('dotenv').config();
 
 // Configuração do Sequelize
@@ -15,15 +15,19 @@ const sequelize = new Sequelize({
   port: 5432,
 });
 
-// Defina o modelo de currículo usando o Sequelize
-const Curriculo = sequelize.define('Curriculo', {
-  nome: {
-    type: DataTypes.STRING,
-  },
-  experiencia: {
-    type: DataTypes.STRING,
-  },
-});
+const userData = {
+    username: 'Usuario1',
+    TextoCurriculo: 'Texto de exemplo do currículo',
+  };
+  
+  UserCurriculo.createUser(userData)
+    .then((user) => {
+      console.log('Novo usuário criado:', user);
+    })
+    .catch((error) => {
+      console.error('Erro ao criar usuário:', error);
+    });
+  
 
 // Sincronize o modelo com o banco de dados
 sequelize.sync();
@@ -34,7 +38,13 @@ app.use(express.json());
 // Rota para listar todos os currículos
 app.get('/curriculos', async (req, res) => {
   try {
-    const curriculos = await Curriculo.findAll();
+    const curriculos = await UserCurriculo.findAllUsers()
+    .then((users) => {
+      console.log('Todos os usuários:', users);
+    })
+    .catch((error) => {
+      console.error('Erro ao encontrar todos os usuários:', error);
+    });
     res.json(curriculos);
   } catch (error) {
     console.error('Erro ao listar currículos:', error);
