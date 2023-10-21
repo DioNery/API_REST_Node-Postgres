@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consumindo a API com Banco de Dados</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 50px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+        }
+
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+        }
+
+        .api-image {
+            width: 100px;
+            height: 100px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Consumindo a API</h1>
+        <hr>
+        <div class="form-group">
+            <label>API com as informações :</label>
+            <button class="btn btn-primary" onclick="fetchApi('api3')">
+                <img src="https://img.freepik.com/fotos-gratis/jovem-expressiva-posando-no-estudio_176474-35677.jpg" alt="pessoa listando" class="api-image">
+                Listar Todos os Currículos: 
+            </button>
+            <pre id="result"></pre>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src= "index.js">
+    </script>
+    <script>
+      async function fetchApi() {
+  const resultElement = document.getElementById(`result`);
+  try {
+    const response = await fetch('/api/users');
+    const data = await response.json();
+    resultElement.textContent = JSON.stringify(data, null, 2);
+  } catch (error) {
+    resultElement.textContent = `Erro: ${error.message}`;
+  }
+}
+    </script>
+</body>
+</html>
