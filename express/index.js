@@ -1,17 +1,32 @@
-require('dotenv').config();
+const { Sequelize, DataTypes } = require('sequelize');
 const express = require('express');
-const pg = require('pg');
 const app = express();
 const port = 3000;
+const UserCurriculo = require('./userModel'); 
+require('dotenv').config();
 
-// // Configuração do banco de dados (substitua com suas próprias credenciais)
-const pool = new pg.Pool({
-  user: process.env.USUARIO_BD,
-  host: 'https://' + process.env.BANCO_URL,
-  database: process.env.DATABASE_BD,
+// Configuração do Sequelize
+const sequelize = new Sequelize({
+  dialect: 'postgres', 
+  host: process.env.BANCO_URL,
+  username: process.env.USUARIO_BD,
   password: process.env.SENHA_BD,
+  database: process.env.DATABASE_BD,
   port: 5432,
 });
+
+// Defina o modelo de currículo usando o Sequelize
+const Curriculo = sequelize.define('Curriculo', {
+  nome: {
+    type: DataTypes.STRING,
+  },
+  experiencia: {
+    type: DataTypes.STRING,
+  },
+});
+
+// Sincronize o modelo com o banco de dados
+sequelize.sync();
 
 // Middleware para análise de corpo JSON
 app.use(express.json());
@@ -19,8 +34,8 @@ app.use(express.json());
 // Rota para listar todos os currículos
 app.get('/curriculos', async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM curriculos');
-    res.json(rows);
+    const curriculos = await Curriculo.findAll();
+    res.json(curriculos);
   } catch (error) {
     console.error('Erro ao listar currículos:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
@@ -31,8 +46,8 @@ app.get('/curriculos', async (req, res) => {
 app.post('/curriculos', async (req, res) => {
   const { nome, experiencia } = req.body;
   try {
-    const { rows } = await pool.query('INSERT INTO curriculos (nome, experiencia) VALUES ($1, $2) RETURNING *', [nome, experiencia]);
-    res.status(201).json(rows[0]);
+    const curriculo = await Curriculo.create({ nome, experiencia });
+    res.status(201).json(curriculo);
   } catch (error) {
     console.error('Erro ao criar currículo:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
@@ -44,7 +59,10 @@ app.put('/curriculos/:id', async (req, res) => {
   const id = req.params.id;
   const { nome, experiencia } = req.body;
   try {
-    const { rowCount } = await pool.query('UPDATE curriculos SET nome = $1, experiencia = $2 WHERE id = $3', [nome, experiencia, id]);
+    const [rowCount] = await Curriculo.update(
+      { nome, experiencia },
+      { where: { id } }
+    );
     if (rowCount === 0) {
       res.status(404).json({ error: 'Currículo não encontrado' });
     } else {
@@ -60,7 +78,7 @@ app.put('/curriculos/:id', async (req, res) => {
 app.delete('/curriculos/:id', async (req, res) => {
   const id = req.params.id;
   try {
-    const { rowCount } = await pool.query('DELETE FROM curriculos WHERE id = $1', [id]);
+    const rowCount = await Curriculo.destroy({ where: { id } });
     if (rowCount === 0) {
       res.status(404).json({ error: 'Currículo não encontrado' });
     } else {
@@ -76,4 +94,3 @@ app.delete('/curriculos/:id', async (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
-
