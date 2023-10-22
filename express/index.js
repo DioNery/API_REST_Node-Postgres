@@ -55,6 +55,9 @@ app.get('/', async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
+app.get('/URL', async (req, res) => {
+  res.send(__dirname + process.env.API_URL);
+})
 
 // Iniciar o servidor
 app.listen(port, () => {
