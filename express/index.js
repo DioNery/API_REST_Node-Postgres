@@ -45,7 +45,8 @@ function startServer() {
   });
 }
 
-app.get('/', async (req, res) => {
+
+app.get('/' || 'api-rest-node-postgres.vercel.app', async (req, res) => {
   if (req.xhr || req.headers.accept.indexOf('json') > -1) {
     // Se a solicitação for uma solicitação AJAX (JSON), retorne a resposta da API
     try {
