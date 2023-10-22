@@ -71,14 +71,14 @@ app.post('/users', async (req, res) => {
 });
 
 // Exemplo de inserção de um novo usuário
-UserCurriculo.create({
-  username: 'Diego',
-  TextoCurriculo: 'Este é um novo currículo.',
-}).then((newUser) => {
-  console.log('Novo usuário criado:', newUser);
-}).catch((error) => {
-  console.error('Erro ao criar novo usuário:', error);
-});
+// UserCurriculo.create({
+//   username: 'Diego',
+//   TextoCurriculo: 'Este é um novo currículo.',
+// }).then((newUser) => {
+//   console.log('Novo usuário criado:', newUser);
+// }).catch((error) => {
+//   console.error('Erro ao criar novo usuário:', error);
+// });
 
   
 // Iniciar o servidor
