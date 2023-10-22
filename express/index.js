@@ -56,11 +56,6 @@ app.get('/', async (req, res) => {
   }
 });
 
-// app.get('/URL', async (req, res) => {
-//   res.send(__dirname + process.env.API_URL);
-// })
-
-
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
