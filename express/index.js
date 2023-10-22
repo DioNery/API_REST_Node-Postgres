@@ -33,7 +33,9 @@ app.use(express.json());
 
 function startServer() {
   // Rota para listar todos os currículos
-  app.get('/api/users', async (req, res) => {
+  const apiURL = process.env.API_URL || '/api/users';
+
+  app.get(apiURL, async (req, res) => {
     try {
       const curriculos = await UserCurriculo.findAllUsers();
       res.json(curriculos);
@@ -42,6 +44,7 @@ function startServer() {
       res.status(500).json({ error: 'Erro interno do servidor' });
     }
   });
+  
 }
 
 app.get('/', async (req, res) => {
