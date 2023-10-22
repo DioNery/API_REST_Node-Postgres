@@ -54,6 +54,33 @@ function startServer() {
   });
 }
 
+app.post('/users', async (req, res) => {
+  try {
+    const { username, TextoCurriculo } = req.body;
+    if (!username || !TextoCurriculo) {
+      return res.status(400).json({ error: 'Campos username e TextoCurriculo são obrigatórios.' });
+    }
+
+  const newUser = await UserCurriculo.createUser({ username, TextoCurriculo });
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    console.error('Erro ao criar usuário:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// Exemplo de inserção de um novo usuário
+UserCurriculo.create({
+  username: 'Diego',
+  TextoCurriculo: 'Este é um novo currículo.',
+}).then((newUser) => {
+  console.log('Novo usuário criado:', newUser);
+}).catch((error) => {
+  console.error('Erro ao criar novo usuário:', error);
+});
+
+  
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);

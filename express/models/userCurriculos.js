@@ -50,7 +50,6 @@ module.exports = (sequelize) => {
       console.error('Erro ao encontrar todos os usuários:', error);
       throw error;
     }
-  };
-
+  };  
   return UserCurriculo;
 };
