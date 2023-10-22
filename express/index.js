@@ -46,13 +46,26 @@ function startServer() {
 }
 
 app.get('/', async (req, res) => {
-  try {
-    res.sendFile(__dirname + '/index.html')
-  } catch (error) {
-    console.error('Erro ao listar currículos:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+  if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+    // Se a solicitação for uma solicitação AJAX (JSON), retorne a resposta da API
+    try {
+      const curriculos = await UserCurriculo.findAllUsers();
+      res.json(curriculos);
+    } catch (error) {
+      console.error('Erro ao listar currículos:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+  } else {
+    // Se a solicitação não for uma solicitação AJAX, sirva o arquivo HTML
+    try {
+      res.sendFile(__dirname + '/index.html');
+    } catch (error) {
+      console.error('Erro ao servir o arquivo HTML:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    }
   }
 });
+
 app.get('/URL', async (req, res) => {
   res.send(process.env.API_URL);
 })
