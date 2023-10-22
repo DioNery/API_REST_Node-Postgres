@@ -33,8 +33,7 @@ app.use(express.json());
 
 function startServer() {
   // Rota para listar todos os currículos
-  const apiURL = process.env.API_URL;
-  app.get(apiURL, async (req, res) => {
+  app.get('/', async (req, res) => {
     try {
       const curriculos = await UserCurriculo.findAllUsers();
       if (req.xhr || req.headers.accept.indexOf('json') > -1) {
