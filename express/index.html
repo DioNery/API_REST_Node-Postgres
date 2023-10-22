@@ -60,143 +60,119 @@
                 Listar Todos os Currículos: (JSON) 
             </button>
             <pre id="result"></pre>
-        <button class="btn btn-primary" onclick="acharNomes()">
-            <img src="https://img.freepik.com/fotos-gratis/jovem-expressiva-posando-no-estudio_176474-35677.jpg" alt="pessoa listando" class="api-image">
-            Listar Todos os usuários: 
-        </button>
-        <pre id="result2"></pre>
-        <button class="btn btn-primary" onclick="acharTextos()">
-            <img src="https://img.freepik.com/fotos-gratis/jovem-expressiva-posando-no-estudio_176474-35677.jpg" alt="pessoa listando" class="api-image">
-            Listar Todos os Textos dos Currículos: 
-        </button>
-        <pre id="result3"></pre>
-        <!-- <button onclick="acharURL()">Aperte para ver URL</button>
-        <h1 id="mostrarURL"></h1> -->
-        <script src="index.js"></script>        
+            <button class="btn btn-primary" onclick="acharNomes()">
+                <img src="https://img.freepik.com/fotos-gratis/jovem-expressiva-posando-no-estudio_176474-35677.jpg" alt="pessoa listando" class="api-image">
+                Listar Todos os usuários: 
+            </button>
+            <pre id="result2"></pre>
+            <button class="btn btn-primary" onclick="acharTextos()">
+                <img src="https://img.freepik.com/fotos-gratis/jovem-expressiva-posando-no-estudio_176474-35677.jpg" alt="pessoa listando" class="api-image">
+                Listar Todos os Textos dos Currículos: 
+            </button>
+            <pre id="result3"></pre>
+            <!-- Outros botões e elementos HTML aqui -->
         </div>
     </div>
 
     <!-- Include Bootstrap JS and Popper.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src= "index.js">
-    </script>
     <script>
       async function acharJSON() {
-  const resultElement = document.getElementById('result');
-  try {
-    // Fazer uma solicitação AJAX para a rota raiz do mesmo domínio
-    const response = await fetch('/', {
-      headers: {
-        'Accept': 'application/json', // Especifica que você deseja receber JSON
-      },
-    });
+        const resultElement = document.getElementById('result');
+        try {
+          // Fazer uma solicitação AJAX para a rota raiz do mesmo domínio
+          const response = await fetch('/', {
+            headers: {
+              'Accept': 'application/json', // Especifica que você deseja receber JSON
+            },
+          });
 
-    if (response.ok) {
-      const data = await response.json();
+          if (response.ok) {
+            const data = await response.json();
 
-      // Verifique se a resposta é uma matriz (lista) de objetos JSON
-      if (Array.isArray(data)) {
-        // Converte a lista de JSONs em uma string formatada
-        const jsonString = JSON.stringify(data, null, 2);
+            // Verifique se a resposta é uma matriz (lista) de objetos JSON
+            if (Array.isArray(data)) {
+              // Converte a lista de JSONs em uma string formatada
+              const jsonString = JSON.stringify(data, null, 2);
 
-        resultElement.textContent = `JSON completo:\n${jsonString}`;
-      } else {
-        resultElement.textContent = "A resposta não é uma lista de JSON válida.";
+              resultElement.textContent = `JSON completo:\n${jsonString}`;
+            } else {
+              resultElement.textContent = "A resposta não é uma lista de JSON válida.";
+            }
+          } else {
+            resultElement.textContent = "Erro na solicitação AJAX. Status: " + response.status;
+          }
+        } catch (error) {
+          resultElement.textContent = `Erro: ${error.message}`;
+        }
       }
-    } else {
-      resultElement.textContent = "Erro na solicitação AJAX. Status: " + response.status;
-    }
-  } catch (error) {
-    resultElement.textContent = `Erro: ${error.message}`;
-  }
-}
 
+      async function acharNomes() {
+        const resultElement = document.getElementById('result2');
+        try {
+          // Fazer uma solicitação AJAX para a rota '/'
+          const response = await fetch('https://api-rest-node-postgres.vercel.app', {
+            headers: {
+              'Accept': 'application/json', // Especifica que você deseja receber JSON
+            },
+          });
 
-async function acharNomes() {
-    const resultElement = document.getElementById('result2');
-  try {
-    // Fazer uma solicitação AJAX para a rota '/'
-    const response = await fetch('https://api-rest-node-postgres.vercel.app', {
-  headers: {
-    'Accept': 'application/json', // Especifica que você deseja receber JSON
-  },
-});
+          if (response.ok) {
+            const data = await response.json();
 
-    if (response.ok) {
-      const data = await response.json();
+            // Verifique se a propriedade TextoCurriculo existe no JSON
+            if (Array.isArray(data) && data[0].hasOwnProperty('username')) {
+              // Mapeie os valores da propriedade TextoCurriculo em um array
+              const username = data.map(user => user.username);
 
-      // Verifique se a propriedade TextoCurriculo existe no JSON
-      if (Array.isArray(data) && data[0].hasOwnProperty('username')) {
-        // Mapeie os valores da propriedade TextoCurriculo em um array
-        const username = data.map(user => user.username);
+              // Junte os valores em uma única string, separados por vírgula
+              const usernameString = username.join(', ');
 
-        // Junte os valores em uma única string, separados por vírgula
-        const usernameString = username.join(', ');
-
-        resultElement.textContent = `Username : ${usernameString}`;
-      } else {
-        resultElement.textContent = "A propriedade TextoCurriculo não foi encontrada no JSON.";
+              resultElement.textContent = `Username : ${usernameString}`;
+            } else {
+              resultElement.textContent = "A propriedade TextoCurriculo não foi encontrada no JSON.";
+            }
+          } else {
+            resultElement.textContent = "Erro na solicitação AJAX. Status: " + response.status;
+          }
+        } catch (error) {
+          resultElement.textContent = `Erro: ${error.message}`;
+        }
       }
-    } else {
-      resultElement.textContent = "Erro na solicitação AJAX. Status: " + response.status;
-    }
-  } catch (error) {
-    resultElement.textContent = `Erro: ${error.message}`;
-  }
-}
-async function acharTextos() {
-  const resultElement = document.getElementById('result3');
-  try {
-    // Fazer uma solicitação AJAX para a rota '/'
-    const response = await fetch('https://api-rest-node-postgres.vercel.app', {
-  headers: {
-    'Accept': 'application/json', // Especifica que você deseja receber JSON
-  },
-});
 
-    if (response.ok) {
-      const data = await response.json();
+      async function acharTextos() {
+        const resultElement = document.getElementById('result3');
+        try {
+          // Fazer uma solicitação AJAX para a rota '/'
+          const response = await fetch('https://api-rest-node-postgres.vercel.app', {
+            headers: {
+              'Accept': 'application/json', // Especifica que você deseja receber JSON
+            },
+          });
 
-      // Verifique se a propriedade TextoCurriculo existe no JSON
-      if (Array.isArray(data) && data[0].hasOwnProperty('TextoCurriculo')) {
-        // Mapeie os valores da propriedade TextoCurriculo em um array
-        const textos = data.map(user => user.TextoCurriculo);
+          if (response.ok) {
+            const data = await response.json();
 
-        // Junte os valores em uma única string, separados por vírgula
-        const textosString = textos.join(', ');
+            // Verifique se a propriedade TextoCurriculo existe no JSON
+            if (Array.isArray(data) && data[0].hasOwnProperty('TextoCurriculo')) {
+              // Mapeie os valores da propriedade TextoCurriculo em um array
+              const textos = data.map(user => user.TextoCurriculo);
 
-        resultElement.textContent = `Textos de Currículo : ${textosString}`;
-      } else {
-        resultElement.textContent = "A propriedade TextoCurriculo não foi encontrada no JSON.";
+              // Junte os valores em uma única string, separados por vírgula
+              const textosString = textos.join(', ');
+
+              resultElement.textContent = `Textos de Currículo : ${textosString}`;
+            } else {
+              resultElement.textContent = "A propriedade TextoCurriculo não foi encontrada no JSON.";
+            }
+          } else {
+            resultElement.textContent = "Erro na solicitação AJAX. Status: " + response.status;
+          }
+        } catch (error) {
+          resultElement.textContent = `Erro: ${error.message}`;
+        }
       }
-    } else {
-      resultElement.textContent = "Erro na solicitação AJAX. Status: " + response.status;
-    }
-  } catch (error) {
-    resultElement.textContent = `Erro: ${error.message}`;
-  }
-}
-async function acharURL() {
-  try {
-    const response = await fetch('/URL');
-    const url = await response.text();
-    const resposta = document.getElementById('mostrarURL');
-    resposta.textContent = url;
-  } catch (error) {
-    console.error('Erro:', error);
-  }
-}
-// async function retornarURL()
-// {
-//     try {
-//     const response = await fetch('/URL');
-//     const url = await response.text();
-//     return url;
-//   } catch (error) {
-//     console.error('Erro:', error);
-//   }
-// }
     </script>
 </body>
 </html>
