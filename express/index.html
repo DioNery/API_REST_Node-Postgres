@@ -55,11 +55,21 @@
         <hr>
         <div class="form-group">
             <label>API com as informações :</label>
-            <button class="btn btn-primary" onclick="fetchApi('api3')">
+            <button class="btn btn-primary" onclick="acharJSON()">
                 <img src="https://img.freepik.com/fotos-gratis/jovem-expressiva-posando-no-estudio_176474-35677.jpg" alt="pessoa listando" class="api-image">
-                Listar Todos os Currículos: 
+                Listar Todos os Currículos: (JSON) 
             </button>
             <pre id="result"></pre>
+        <button class="btn btn-primary" onclick="acharNomes()">
+            <img src="https://img.freepik.com/fotos-gratis/jovem-expressiva-posando-no-estudio_176474-35677.jpg" alt="pessoa listando" class="api-image">
+            Listar Todos os usuários: 
+        </button>
+        <pre id="result2"></pre>
+        <button class="btn btn-primary" onclick="acharTextos()">
+            <img src="https://img.freepik.com/fotos-gratis/jovem-expressiva-posando-no-estudio_176474-35677.jpg" alt="pessoa listando" class="api-image">
+            Listar Todos os Textos dos Currículos: 
+        </button>
+        <pre id="result3"></pre>
         </div>
     </div>
 
@@ -69,12 +79,56 @@
     <script src= "index.js">
     </script>
     <script>
-      async function fetchApi() {
+      async function acharJSON() {
   const resultElement = document.getElementById(`result`);
   try {
     const response = await fetch('/api/users');
     const data = await response.json();
     resultElement.textContent = JSON.stringify(data, null, 2);
+  } catch (error) {
+    resultElement.textContent = `Erro: ${error.message}`;
+  }
+}
+async function acharNomes() {
+  const resultElement = document.getElementById(`result2`);
+  try {
+    const response = await fetch('/api/users');
+    const data = await response.json();
+
+    // Verifica se a resposta é um array
+    if (Array.isArray(data)) {
+      // Itera sobre os objetos no array
+      const usernames = data.map(user => user.username);
+
+      // Converte os nomes de usuário em uma string para exibição
+      const usernamesString = usernames.join(', ');
+
+      resultElement.textContent = `Nomes de usuário: ${usernamesString}`;
+    } else {
+      resultElement.textContent = "Dados da API em formato inesperado.";
+    }
+  } catch (error) {
+    resultElement.textContent = `Erro: ${error.message}`;
+  }
+}
+async function acharTextos() {
+  const resultElement = document.getElementById(`result3`);
+  try {
+    const response = await fetch('/api/users');
+    const data = await response.json();
+
+    // Verifica se a resposta é um array
+    if (Array.isArray(data)) {
+      // Itera sobre os objetos no array
+      const textos = data.map(user => user.TextoCurriculo);
+
+      // Converte os nomes de usuário em uma string para exibição
+      const textosString = textos.join(', ');
+
+      resultElement.textContent = `Textos de Currículo : ${textosString}`;
+    } else {
+      resultElement.textContent = "Dados da API em formato inesperado.";
+    }
   } catch (error) {
     resultElement.textContent = `Erro: ${error.message}`;
   }
