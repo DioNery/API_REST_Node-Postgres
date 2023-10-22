@@ -86,7 +86,7 @@
   const resultElement = document.getElementById('result');
   try {
     // Fazer uma solicitação AJAX para a rota '/'
-    const response = await fetch('/', {
+    const response = await fetch('/' || 'api-rest-node-postgres.vercel.app', {
       headers: {
         'Accept': 'application/json', // Especifica que você deseja receber JSON
       },
@@ -116,7 +116,7 @@ async function acharNomes() {
     const resultElement = document.getElementById('result2');
   try {
     // Fazer uma solicitação AJAX para a rota '/'
-    const response = await fetch('/', {
+    const response = await fetch('/' || 'api-rest-node-postgres.vercel.app', {
       headers: {
         'Accept': 'application/json', // Especifica que você deseja receber JSON
       },
@@ -148,7 +148,7 @@ async function acharTextos() {
   const resultElement = document.getElementById('result3');
   try {
     // Fazer uma solicitação AJAX para a rota '/'
-    const response = await fetch('/', {
+    const response = await fetch('/' || 'api-rest-node-postgres.vercel.app', {
       headers: {
         'Accept': 'application/json', // Especifica que você deseja receber JSON
       },
