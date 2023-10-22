@@ -1,8 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const express = require('express');
-const accepts = require('accepts');
 const app = express();
-const port = process.env.PORT || 3001; // Use a variável de ambiente PORT se estiver disponível
+const port = 3001;
 require('dotenv').config();
 
 // Configuração do Sequelize
@@ -35,18 +34,22 @@ app.use(express.json());
 function startServer() {
   // Rota para listar todos os currículos
   app.get('/', async (req, res) => {
-    const accept = accepts(req);
-    
-    if (accept.json() === 'json') {
-      try {
-        const curriculos = await UserCurriculo.findAllUsers();
+    try {
+      const curriculos = await UserCurriculo.findAllUsers();
+      
+      // Verifique o cabeçalho "Accept" da solicitação
+      const acceptHeader = req.get('Accept');
+      
+      if (acceptHeader && acceptHeader.includes('application/json')) {
+        // Se o cliente aceitar JSON, envie os dados como JSON
         res.json(curriculos);
-      } catch (error) {
-        console.error('Erro ao listar currículos:', error);
-        res.status(500).json({ error: 'Erro interno do servidor' });
+      } else {
+        // Caso contrário, envie o arquivo HTML
+        res.sendFile(__dirname + '/index.html');
       }
-    } else {
-      res.sendFile(__dirname + '/index.html');
+    } catch (error) {
+      console.error('Erro ao listar currículos:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
     }
   });
 }
