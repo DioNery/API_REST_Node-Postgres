@@ -1,7 +1,8 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const express = require('express');
+const accepts = require('accepts');
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001; // Use a variável de ambiente PORT se estiver disponível
 require('dotenv').config();
 
 // Configuração do Sequelize
@@ -34,23 +35,21 @@ app.use(express.json());
 function startServer() {
   // Rota para listar todos os currículos
   app.get('/', async (req, res) => {
-    try {
-      const curriculos = await UserCurriculo.findAllUsers();
-      if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-        // Se a solicitação for uma solicitação AJAX (JSON), retorne a resposta da API como JSON
+    const accept = accepts(req);
+    
+    if (accept.json() === 'json') {
+      try {
+        const curriculos = await UserCurriculo.findAllUsers();
         res.json(curriculos);
-      } else {
-        // Se a solicitação não for uma solicitação AJAX, sirva o arquivo HTML
-        res.sendFile(__dirname + '/index.html');
+      } catch (error) {
+        console.error('Erro ao listar currículos:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
       }
-    } catch (error) {
-      console.error('Erro ao listar currículos:', error);
-      res.status(500).json({ error: 'Erro interno do servidor' });
+    } else {
+      res.sendFile(__dirname + '/index.html');
     }
   });
 }
-
-// Outras rotas e configurações
 
 // Iniciar o servidor
 app.listen(port, () => {
