@@ -37,12 +37,11 @@ function startServer() {
   app.get(apiURL, async (req, res) => {
     try {
       const curriculos = await UserCurriculo.findAllUsers();
-      // Verifique o cabeçalho 'Accept' para decidir entre HTML e JSON
-      if (req.headers.accept && req.headers.accept.indexOf('json') > -1) {
-        // Se a solicitação aceitar JSON, retorne o JSON
+      if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+        // Se a solicitação for uma solicitação AJAX (JSON), retorne a resposta da API como JSON
         res.json(curriculos);
       } else {
-        // Caso contrário, sirva o arquivo HTML
+        // Se a solicitação não for uma solicitação AJAX, sirva o arquivo HTML
         res.sendFile(__dirname + '/index.html');
       }
     } catch (error) {
@@ -52,9 +51,7 @@ function startServer() {
   });
 }
 
-app.get('/URL', async (req, res) => {
-  res.send(process.env.API_URL);
-});
+// Outras rotas e configurações
 
 // Iniciar o servidor
 app.listen(port, () => {
