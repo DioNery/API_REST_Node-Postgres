@@ -47,8 +47,6 @@ function startServer() {
 
 app.get('/', async (req, res) => {
   try {
-    const curriculos = await UserCurriculo.findAllUsers();
-    // res.json(curriculos);
     res.sendFile(__dirname + '/index.html')
   } catch (error) {
     console.error('Erro ao listar currículos:', error);
@@ -56,7 +54,7 @@ app.get('/', async (req, res) => {
   }
 });
 app.get('/URL', async (req, res) => {
-  res.send(__dirname + process.env.API_URL);
+  res.send(process.env.API_URL);
 })
 
 // Iniciar o servidor

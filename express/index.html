@@ -97,13 +97,8 @@ async function acharNomes() {
   try {
     const response = await fetch('/api/users');
     const data = await response.json();
-
-    // Verifica se a resposta é um array
     if (Array.isArray(data)) {
-      // Itera sobre os objetos no array
       const usernames = data.map(user => user.username);
-
-      // Converte os nomes de usuário em uma string para exibição
       const usernamesString = usernames.join(', ');
 
       resultElement.textContent = `Nomes de usuário: ${usernamesString}`;
@@ -119,15 +114,9 @@ async function acharTextos() {
   try {
     const response = await fetch('/api/users');
     const data = await response.json();
-
-    // Verifica se a resposta é um array
     if (Array.isArray(data)) {
-      // Itera sobre os objetos no array
       const textos = data.map(user => user.TextoCurriculo);
-
-      // Converte os nomes de usuário em uma string para exibição
       const textosString = textos.join(', ');
-
       resultElement.textContent = `Textos de Currículo : ${textosString}`;
     } else {
       resultElement.textContent = "Dados da API em formato inesperado.";
@@ -136,7 +125,6 @@ async function acharTextos() {
     resultElement.textContent = `Erro: ${error.message}`;
   }
 }
-
 async function acharURL() {
   try {
     const response = await fetch('/URL');
@@ -147,7 +135,16 @@ async function acharURL() {
     console.error('Erro:', error);
   }
 }
-
+// async function retornarURL()
+// {
+//     try {
+//     const response = await fetch('/URL');
+//     const url = await response.text();
+//     return url;
+//   } catch (error) {
+//     console.error('Erro:', error);
+//   }
+// }
     </script>
 </body>
 </html>
