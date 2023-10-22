@@ -69,16 +69,47 @@ app.post('/users', async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
+app.put('/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { username, TextoCurriculo } = req.body;
+    
+    const user = await UserCurriculo.findOne({ where: { id } });
 
-// Exemplo de inserção de um novo usuário
-// UserCurriculo.create({
-//   username: 'Diego',
-//   TextoCurriculo: 'Este é um novo currículo.',
-// }).then((newUser) => {
-//   console.log('Novo usuário criado:', newUser);
-// }).catch((error) => {
-//   console.error('Erro ao criar novo usuário:', error);
-// });
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    // Atualize os dados do usuário
+    user.username = username;
+    user.TextoCurriculo = TextoCurriculo;
+    await user.save();
+
+    res.json(user);
+  } catch (error) {
+    console.error('Erro ao atualizar usuário:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+app.delete('/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await UserCurriculo.findOne({ where: { id } });
+
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    await user.destroy();
+
+    res.json({ message: 'Usuário excluído com sucesso' });
+  } catch (error) {
+    console.error('Erro ao excluir usuário:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 
   
 // Iniciar o servidor
