@@ -36,17 +36,7 @@ function startServer() {
   app.get('/', async (req, res) => {
     try {
       const curriculos = await UserCurriculo.findAllUsers();
-
-      // // Verifique o cabeçalho "Accept" da solicitação
-      // const acceptHeader = req.get('Accept');
-
-      // if (acceptHeader && acceptHeader.includes('application/json')) {
-        // Se o cliente aceitar JSON, envie os dados como JSON
         res.json(curriculos);
-      // } else {
-      //   // Caso contrário, envie o arquivo HTML
-      //   res.sendFile(__dirname + '/index.html');
-      // }
     } catch (error) {
       console.error('Erro ao listar currículos:', error);
       res.status(500).json({ error: 'Erro interno do servidor' });
