@@ -38,6 +38,7 @@ function startServer() {
     res.redirect('/users')
   })
 }
+//a
 app.get('/users', async (req, res) => {
   try {
     const curriculos = await UserCurriculo.findAllUsers();
