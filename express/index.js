@@ -31,7 +31,6 @@ app.use(express.json());
   }
 })();
 
-function startServer() {
   // Rota para listar todos os currículos
   app.get('/', async (req, res) => {
     try {
@@ -42,7 +41,6 @@ function startServer() {
       res.status(500).json({ error: 'Erro interno do servidor' });
     }
   });
-}
 
 app.post('/users', async (req, res) => {
   try {
