@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const port = process.env.PORT || 3001;
 require('dotenv').config();
 
@@ -19,7 +20,7 @@ const UserCurriculo = require('./models/userCurriculos')(sequelize);
 
 // Middleware para análise de corpo JSON
 app.use(express.json());
-
+app.use(cors());
 // Sincronize o modelo com o banco de dados e inicie o servidor depois
 (async () => {
   try {
