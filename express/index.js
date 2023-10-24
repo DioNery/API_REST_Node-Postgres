@@ -34,6 +34,14 @@ app.use(express.json());
   // Rota para listar todos os currículos
   app.get('/', async (req, res) => {
     try {
+      res.redirect('/users')
+    } catch (error) {
+      console.error('Erro ao listar currículos:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+  });
+  app.get('/users', async (req, res) => {
+    try {
       const curriculos = await UserCurriculo.findAllUsers();
         res.json(curriculos);
     } catch (error) {
