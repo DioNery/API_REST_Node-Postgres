@@ -107,6 +107,6 @@ app.use(express.json());
 
   
 // Iniciar o servidor
-app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Servidor rodando na porta ${port}`);
+// });
