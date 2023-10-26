@@ -20,29 +20,15 @@ const UserCurriculo = require('./models/userCurriculos')(sequelize);
 // Middleware para análise de corpo JSON
 app.use(express.json());
 
-// Sincronize o modelo com o banco de dados e inicie o servidor depois
-(async () => {
-  try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    startServer();
-  } catch (error) {
-    console.error('Erro na conexão com o banco de dados:', error);
-  }
-})();
+// Rota para listar todos os currículos
+app.get('/', (req, res) => {
+  res.redirect('/users');
+});
 
-function startServer() {
-  // Rota para listar todos os currículos
-  app.get('/', (req,res) =>
-  {
-    res.redirect('/users')
-  })
-}
-//a
 app.get('/users', async (req, res) => {
   try {
     const curriculos = await UserCurriculo.findAllUsers();
-      res.json(curriculos);
+    res.json(curriculos);
   } catch (error) {
     console.error('Erro ao listar currículos:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
@@ -56,7 +42,7 @@ app.post('/users', async (req, res) => {
       return res.status(400).json({ error: 'Campos username e TextoCurriculo são obrigatórios.' });
     }
 
-  const newUser = await UserCurriculo.createUser({ username, TextoCurriculo });
+    const newUser = await UserCurriculo.createUser({ username, TextoCurriculo });
 
     res.status(201).json(newUser);
   } catch (error) {
@@ -64,6 +50,7 @@ app.post('/users', async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
+
 app.put('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -86,6 +73,7 @@ app.put('/users/:id', async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
+
 app.delete('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -105,8 +93,6 @@ app.delete('/users/:id', async (req, res) => {
   }
 });
 
-
-  
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
