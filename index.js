@@ -61,7 +61,6 @@ app.put('/users/:id', async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
     }
-
     // Atualize os dados do usuário
     user.username = username;
     user.TextoCurriculo = TextoCurriculo;
@@ -73,17 +72,13 @@ app.put('/users/:id', async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
-
 app.delete('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
-
     const user = await UserCurriculo.findOne({ where: { id } });
-
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
     }
-
     await user.destroy();
 
     res.json({ message: 'Usuário excluído com sucesso' });
@@ -92,9 +87,7 @@ app.delete('/users/:id', async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
-
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
-//a
