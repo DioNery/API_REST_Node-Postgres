@@ -43,10 +43,6 @@ app.get('/users', async (req, res) => {
   try {
     const curriculos = await UserCurriculo.findAllUsers();
       res.json(curriculos);
-    // } else {
-    //   // Caso contrário, envie o arquivo HTML
-    //   res.sendFile(__dirname + '/index.html');
-    // }
   } catch (error) {
     console.error('Erro ao listar currículos:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
