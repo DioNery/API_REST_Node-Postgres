@@ -1,8 +1,15 @@
+const admin = require('firebase-admin');
 const { Sequelize, DataTypes } = require('sequelize');
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3001;
 require('dotenv').config();
+
+const serviceAccount = require('./google-services.json');
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://console.firebase.google.com/project/autenticacaonode/database/autenticacaonode-default-rtdb/data/~2F?hl=pt-br',
+});
 
 // Configuração do Sequelize
 const sequelize = new Sequelize({
@@ -17,6 +24,25 @@ const sequelize = new Sequelize({
 // Importar o modelo após criar a instância do sequelize
 const UserCurriculo = require('./models/userCurriculos')(sequelize);
 
+function isAuthenticated(req, res, next) {
+  const idToken = req.header('Authorization');
+  if (!idToken) {
+    return res.status(403).json({ error: 'Token de autenticação ausente' });
+  }
+
+  admin
+    .auth()
+    .verifyIdToken(idToken)
+    .then((decodedToken) => {
+      req.user = decodedToken;
+      next();
+    })
+    .catch((error) => {
+      res.status(403).json({ error: 'Token de autenticação inválido' });
+    });
+}
+
+
 // Middleware para análise de corpo JSON
 app.use(express.json());
 
@@ -25,7 +51,7 @@ app.get('/', (req, res) => {
   res.redirect('/users');
 });
 
-app.get('/users', async (req, res) => {
+app.get('/users', isAuthenticated, async (req, res) => {
   try {
     const curriculos = await UserCurriculo.findAllUsers();
     res.json(curriculos);
