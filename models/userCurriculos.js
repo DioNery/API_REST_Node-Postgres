@@ -1,55 +1,32 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  const UserCurriculo = sequelize.define("userCurriculo", {
+  const UserCurriculo = sequelize.define('UserCurriculo', {
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    TextoCurriculo: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    userId: {
+      type: DataTypes.STRING,  // Assumindo que o ID do usuário no Firebase é uma string
+      allowNull: false,
+    },
+  });
 
-      username: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
-      },
-
-      TextoCurriculo: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
-      },
-  }
-);
-
-  UserCurriculo.createUser = async (username, TextoCurriculo) => {
-    try {
-      const newUser = await UserCurriculo.create({
-        username: username,
-        TextoCurriculo: TextoCurriculo,
-      });
-      return newUser;
-    } catch (error) {
-      console.error('Erro ao criar usuário:', error);
-      throw error;
-    }
+  UserCurriculo.createUser = async function ({ username, TextoCurriculo, userId }) {
+    return UserCurriculo.create({
+      username,
+      TextoCurriculo,
+      userId,
+    });
   };
 
-  // Associação de tabelas
-  UserCurriculo.associate = (models) => {
-    UserCurriculo.hasMany(models.TextoCurriculo, { onDelete: "CASCADE" });
+  UserCurriculo.findAllUsers = async function () {
+    return UserCurriculo.findAll();
   };
 
-  // Encontrar todos os usuários
-  UserCurriculo.findAllUsers = async () => {
-    try {
-      const users = await UserCurriculo.findAll();
-      return users;
-    } catch (error) {
-      console.error('Erro ao encontrar todos os usuários:', error);
-      throw error;
-    }
-  };  
   return UserCurriculo;
 };
